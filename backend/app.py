@@ -748,6 +748,7 @@ def get_puzzles():
         "image": row["image"],
         "time": row["created_at"]
     })
+    
 
 # ---------------- PROFILE ----------------
 @app.route('/save-profile', methods=['POST'])
@@ -801,9 +802,10 @@ if __name__ == '__main__':
 
     init_db()
 
+    port = int(os.environ.get("PORT", 5000))
+
     socketio.run(
         app,
         host="0.0.0.0",
-        port=5000,
-        debug=True
+        port=port
     )
