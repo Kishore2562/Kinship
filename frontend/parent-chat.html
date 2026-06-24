@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0B1F3A">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+    <title>Parent Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+if (!sessionStorage.getItem("kinship_unlocked")) {
+    sessionStorage.setItem("kinship_target", window.location.href);
+    window.location.href = "login.html";
+}
+</script>
+
+<!-- Notification -->
+<div id="notification" class="notification"></div>
+
+<audio id="notifSound" src="notify.mp3"></audio>
+
+<div class="container">
+
+<h2> Parent Chat</h2>
+
+<div id="chatBox"></div>
+
+<input type="text" id="messageInput" placeholder="Type message...">
+<button onclick="sendMessage()">Send</button>
+
+<br><br>
+<button onclick="goBack()">Back</button>
+
+</div>
+
+<div class="bond-container">
+    <div class="bond-bar">
+        <div id="bondFill"></div>
+    </div>
+    <span id="bondPercent">0%</span>
+</div>
+
+<script src="utils.js"></script>
+
+<script src="parent-chat.js"></script>
+
+
+</body>
+</html>

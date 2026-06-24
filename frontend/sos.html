@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kinship – SOS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+if (!sessionStorage.getItem("kinship_unlocked")) {
+    sessionStorage.setItem("kinship_target", window.location.href);
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="container">
+
+<h2>Emergency SOS</h2>
+
+<p style="color:#E50914;">
+Use only in emergency situations
+</p>
+
+<button onclick="triggerSOS()">
+🚨 SEND SOS
+</button>
+
+<p id="response"></p>
+
+<br>
+<button onclick="goBack()">Back</button>
+
+</div>
+
+<script>
+
+function triggerSOS() {
+
+    const userId = localStorage.getItem("user_id");
+
+    if (!userId) {
+        document.getElementById("response").innerText =
+            "User not registered. Please login again.";
+        return;
+    }
+
+    fetch('http://127.0.0.1:5000/sos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            triggered_by: "Student " + userId
+        })
+    })
+    .then(res => res.json())
+    .then(() => {
+        document.getElementById("response").innerText =
+            "SOS sent successfully";
+    })
+    .catch(() => {
+        document.getElementById("response").innerText =
+            "Error sending SOS";
+    });
+}
+
+function goBack() {
+    window.location.href = "student.html";
+}
+
+</script>
+
+</body>
+</html>

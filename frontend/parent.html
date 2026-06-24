@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0B1F3A">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta charset="UTF-8">
+<title>Parent Dashboard</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div class="top-bar">
+
+    <div class="user-info">
+        <span id="userName">User</span>
+        <small id="userRole">Role</small>
+    </div>
+
+    <img id="profileIcon" src="default.png" class="profile-icon" onclick="openProfile()">
+
+</div>
+
+<h2>👨‍👩‍👦 Parent Dashboard</h2>
+
+<script>
+if (!sessionStorage.getItem("kinship_unlocked")) {
+    sessionStorage.setItem("kinship_target", window.location.href);
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="card">
+    <h3>📍 Student Status</h3>
+
+    <button onclick="loadCheckin()">🔄 Refresh Status</button>
+
+    <p id="status">Loading...</p>
+    <p id="time"></p>
+</div>
+
+<div class="card sos-card">
+
+    <h3>🚨 Last SOS</h3>
+
+    <div id="lastSosUser" class="sos-user">
+        No SOS
+</div>
+
+<button onclick="viewSOSHistory()">
+    📜 View History
+</button>
+
+
+    <div id="lastSosTime" class="sos-time">
+    </div>
+
+</div>
+
+<!-- Notification -->
+<div id="notification" class="notification"></div>
+
+<audio id="notifSound" src="notify.mp3"></audio>
+
+<!-- SOS -->
+<div id="sosBox" class="sos-box" style="display:none;">
+    <p id="sosText"></p>
+    <button class="sos-btn" onclick="stopAlarm()">Stop Alarm</button>
+</div>
+
+<!-- RELATIONSHIP -->
+<div class="card">
+    <h3>❤️ Relationship</h3>
+    <div class="bond-bar">
+        <div id="bondFill"></div>
+    </div>
+    <p id="bondPercent">0%</p>
+</div>
+
+<!-- PAIR -->
+<div class="card" id="pairSection">
+    <h3>🔗 Connect with Student</h3>
+    <input type="text" id="pairCodeInput" placeholder="Enter Pair Code">
+    <button id="connectBtn" onclick="connectWithCode()">Connect</button>
+    <p id="statusText"></p>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+    <button onclick="openChat()">💬 Chat</button>
+    <button onclick="openPuzzle()">🧩 Puzzle</button>
+</div>
+
+<!-- PROFILE -->
+<button onclick="openProfile()">👤 Profile</button>
+
+<!-- LOGOUT -->
+<button onclick="logout()">🚪 Logout</button>
+
+<!-- AUDIO -->
+<audio id="alarmSound" src="alarm.mp3"></audio>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script src="utils.js"></script>
+
+<script type="module" src="parent.js"></script>
+
+
+</body>
+</html>

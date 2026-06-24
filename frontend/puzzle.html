@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0B1F3A">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+    <title>Puzzle Space</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h2> Puzzle Space</h2>
+
+<input type="file" id="imageInput">
+<button onclick="sendPuzzle()">Send Puzzle</button>
+
+<!-- Notification -->
+<div id="notification" class="notification"></div>
+
+<script>
+if (!sessionStorage.getItem("kinship_unlocked")) {
+    sessionStorage.setItem("kinship_target", window.location.href);
+    window.location.href = "login.html";
+}
+</script>
+
+
+<hr>
+
+<button onclick="loadPuzzle()">Load Puzzle</button>
+
+<p id="timer"> Time: 0s</p>
+
+<div id="puzzleBoard" data-img=""></div>
+
+<p id="result"></p>
+
+<button id="finishBtn" style="display:none;" onclick="finishPuzzle()">
+    Finish Puzzle
+</button>
+
+<audio id="successSound" src="fahhhhh.mp3"></audio>
+
+<button id="sendResultBtn" style="display:none;" onclick="sendResult()">
+ Send Result to Chat
+</button>
+
+<script src="utils.js"></script>
+
+<script src="puzzle.js"></script>
+
+
+</body>
+</html>

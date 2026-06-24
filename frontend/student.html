@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0B1F3A">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta charset="UTF-8">
+<title>Student Dashboard</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div class="top-bar">
+
+    <div class="user-info">
+        <span id="userName">User</span>
+        <small id="userRole">Role</small>
+    </div>
+
+    <img id="profileIcon" src="default.png" class="profile-icon" onclick="openProfile()">
+
+</div>
+
+<h2>🎓 Student Dashboard</h2>
+
+<script>
+if (!sessionStorage.getItem("kinship_unlocked")) {
+    sessionStorage.setItem("kinship_target", window.location.href);
+    window.location.href = "login.html";
+}
+</script>
+
+<!-- PAIR -->
+<div class="card">
+    <h3>🔑 Pair with Parent</h3>
+    <button id="generateBtn" onclick="generatePairCode()">Generate Code</button>
+    <p id="pairCodeDisplay"></p>
+</div>
+
+<!-- Notification -->
+<div id="notification" class="notification"></div>
+
+<audio id="notifSound" src="notify.mp3"></audio>
+
+<!-- CHECK-IN -->
+<div class="card">
+    <h3>📍 Check-in</h3>
+
+    <div class="button-group">
+        <button onclick="sendCheckin('I am good')">I am good</button>
+        <button onclick="sendCheckin('I am ok')">I am ok</button>
+    </div>
+
+    <button onclick="sendCheckin('I am not okay')">I am not okay</button>
+</div>
+
+<!-- SOS -->
+<div class="card">
+    <h3>🚨 Emergency</h3>
+    <button class="sos-btn" onclick="sendSOS()">Send SOS</button>
+</div>
+
+<!-- RELATIONSHIP -->
+<div class="card">
+    <h3>❤️ Bond</h3>
+    <div class="bond-bar">
+        <div id="bondFill"></div>
+    </div>
+    <p id="bondPercent">0%</p>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+    <button onclick="openChat()">💬 Chat</button>
+    <button onclick="openPuzzle()">🧩 Puzzle</button>
+</div>
+
+<!-- PROFILE -->
+<button onclick="openProfile()">👤 Profile</button>
+
+<!-- LOGOUT -->
+<button onclick="logout()">🚪 Logout</button>
+
+
+<script src="utils.js"></script>
+
+<script type="module" src="student.js"></script>
+
+
+</body>
+</html>

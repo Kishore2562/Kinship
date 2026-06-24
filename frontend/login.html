@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0B1F3A">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Login</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+<input type="email" id="email" placeholder="Enter your email">
+
+<button onclick="login()">Login</button>
+
+<p id="msg"></p>
+
+<!-- OTP SECTION (HIDDEN INITIALLY) -->
+<div id="otpSection" style="display:none;">
+    <button onclick="sendOTP()">Send OTP</button>
+    <input type="text" id="otp" placeholder="Enter OTP">
+    <button onclick="verifyOTP()">Verify</button>
+</div>
+
+</div>
+
+<script src="login.js"></script>
+</body>
+</html>
