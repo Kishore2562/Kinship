@@ -6,6 +6,7 @@ from flask_socketio import SocketIO, emit
 import sqlite3
 import random
 import smtplib
+import os
 app = Flask(__name__)
 
 # ✅ FIXED CORS (ONLY THIS — remove previous ones)
@@ -66,8 +67,6 @@ def send_email_otp(email, otp):
 
     except Exception as e:
         print("EMAIL ERROR ❌:", e)
-
-
 
 @app.route('/send-email-otp', methods=['POST'])
 def send_email_otp_route():
@@ -552,6 +551,98 @@ def sos_history():
         for row in rows
     ])
 
+def init_db():
+
+    os.makedirs("database", exist_ok=True)
+
+    conn = sqlite3.connect("database/kinship.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sender TEXT,
+        message TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        sender_id INTEGER
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS sos_events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        triggered_by TEXT,
+        triggered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS puzzles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sender TEXT,
+        image TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS connections (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        parent_id INTEGER,
+        student_id INTEGER
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS pair_codes (
+        code TEXT,
+        student_id INTEGER
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS checkins (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        status TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS profiles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        name TEXT,
+        phone TEXT,
+        photo TEXT
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT,
+        role TEXT,
+        device_id TEXT
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS otp_codes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT,
+        otp TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+    print("✅ DATABASE INITIALIZED")
+
+
 # ---------------- RELATIONSHIP ----------------
 @app.route('/relationship-score', methods=['GET'])
 def relationship_score():
@@ -707,7 +798,12 @@ def handle_disconnect():
 
 # ---------------- RUN ----------------
 if __name__ == '__main__':
+
+    init_db()
+
     socketio.run(
         app,
+        host="0.0.0.0",
+        port=5000,
         debug=True
     )
