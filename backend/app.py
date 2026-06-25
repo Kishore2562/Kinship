@@ -16,6 +16,11 @@ socketio = SocketIO(
     cors_allowed_origins="*"
 )
 
+@app.route('/test')
+def test():
+    print("TEST ROUTE HIT")
+    return jsonify({"status":"ok"})
+
 def send_email_otp(email, otp):
     try:
         sender = os.environ.get("EMAIL_USER")
