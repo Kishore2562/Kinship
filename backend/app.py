@@ -9,8 +9,8 @@ import smtplib
 import os
 app = Flask(__name__)
 
-# ✅ FIXED CORS (ONLY THIS — remove previous ones)
-CORS(app, origins=["http://localhost:5500"], supports_credentials=True)
+# ✅ FIXED CORS (ONLY THIS — remove previous 
+CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(
     app,
     cors_allowed_origins="*"
