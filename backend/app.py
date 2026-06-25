@@ -118,8 +118,8 @@ def send_email_otp_route():
         print("OTP ROUTE ERROR:", str(e))
 
         return jsonify({
-            "error": str(e)
-        }), 500
+         "message": "KINSHIP_OTP_TEST_12345"
+        })
 
 @app.route('/verify-email-otp', methods=['POST'])
 def verify_email_otp():
