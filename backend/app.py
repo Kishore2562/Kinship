@@ -118,9 +118,9 @@ def send_email_otp_route():
         print("OTP ROUTE ERROR:", str(e))
 
         return jsonify({
-         "message": "KINSHIP_OTP_TEST_12345"
-        })
-
+            "error": str(e)
+        }), 500
+        
 @app.route('/verify-email-otp', methods=['POST'])
 def verify_email_otp():
 
@@ -174,6 +174,33 @@ def verify_email_otp():
             "error": str(e)
         }), 500
 # ---------------- DATABASE ----------------
+@app.route('/db-test')
+def db_test():
+
+    try:
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT COUNT(*) FROM otp_codes"
+        )
+
+        count = cursor.fetchone()[0]
+
+        conn.close()
+
+        return jsonify({
+            "status": "ok",
+            "count": count
+        })
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
 def get_db_connection():
     conn = sqlite3.connect('database/kinship.db')
     conn.row_factory = sqlite3.Row
