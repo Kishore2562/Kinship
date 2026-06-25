@@ -18,8 +18,8 @@ socketio = SocketIO(
 
 def send_email_otp(email, otp):
     try:
-        sender = "thekishverse@gmail.com"
-        password = "plhcxgeufarzkypw"
+        sender = os.environ.get("EMAIL_USER")
+        password = os.environ.get("EMAIL_PASS")
 
         msg = MIMEText(f"""
         <html>
