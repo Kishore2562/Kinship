@@ -71,45 +71,98 @@ def send_email_otp(email, otp):
 @app.route('/send-email-otp', methods=['POST'])
 def send_email_otp_route():
 
-    print("OTP ROUTE HIT")
+    try:
 
-    return jsonify({
-        "message": "OTP route working"
-    })
-        
-def verify_email_otp():
-    data = request.get_json()
-    email = data.get('email')
-    otp = data.get('otp')
-    device_id = data.get('device_id')  # ✅ NEW
+        data = request.get_json()
+        email = data.get('email')
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
+        if not email:
+            return jsonify({
+                "error": "Email required"
+            }), 400
 
-    cursor.execute("""
-        SELECT * FROM otp_codes
-        WHERE email=? AND otp=?
-        AND datetime(created_at) >= datetime('now', '-5 minutes')
-        ORDER BY id DESC LIMIT 1
-    """, (email, otp))
+        otp = str(random.randint(1000, 9999))
 
-    record = cursor.fetchone()
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
-    if not record:
+        cursor.execute(
+            "INSERT INTO otp_codes (email, otp) VALUES (?, ?)",
+            (email, otp)
+        )
+
+        conn.commit()
         conn.close()
-        return jsonify({"error": "Invalid or expired OTP"})
 
-    # ✅ MARK DEVICE AS VERIFIED
-    cursor.execute(
-        "UPDATE users SET device_id=? WHERE email=?",
-        (device_id, email)
-    )
+        print("OTP GENERATED:", otp)
 
-    conn.commit()
-    conn.close()
+        send_email_otp(email, otp)
 
-    return jsonify({"message": "Verified"})
+        return jsonify({
+            "message": "OTP sent"
+        })
 
+    except Exception as e:
+
+        print("OTP ERROR:", str(e))
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+@app.route('/verify-email-otp', methods=['POST'])
+def verify_email_otp():
+
+    try:
+
+        data = request.get_json()
+
+        email = data.get('email')
+        otp = data.get('otp')
+        device_id = data.get('device_id')
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT *
+            FROM otp_codes
+            WHERE email=?
+            AND otp=?
+            AND datetime(created_at) >= datetime('now', '-5 minutes')
+            ORDER BY id DESC
+            LIMIT 1
+        """, (email, otp))
+
+        record = cursor.fetchone()
+
+        if not record:
+            conn.close()
+
+            return jsonify({
+                "error": "Invalid or expired OTP"
+            })
+
+        cursor.execute(
+            "UPDATE users SET device_id=? WHERE email=?",
+            (device_id, email)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({
+            "message": "Verified"
+        })
+
+    except Exception as e:
+
+        print("VERIFY OTP ERROR:", str(e))
+
+        return jsonify({
+            "error": str(e)
+        }), 500
 # ---------------- DATABASE ----------------
 def get_db_connection():
     conn = sqlite3.connect('database/kinship.db')
