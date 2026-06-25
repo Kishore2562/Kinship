@@ -8,7 +8,7 @@ function getUsername() {
 
 function loadMessages() {
 
-    fetch('http://127.0.0.1:5000/messages')
+    fetch('https://kinship-backend-oftd.onrender.com/messages')
     .then(res => res.json())
     .then(data => {
 
@@ -57,7 +57,7 @@ function sendMessage() {
     const username = sessionStorage.getItem("username");
     const userId = localStorage.getItem("user_id");
 
-    fetch('http://127.0.0.1:5000/send-message', {
+    fetch('https://kinship-backend-oftd.onrender.com/send-message', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
@@ -80,7 +80,7 @@ function sendMessage() {
     });
 }
 function loadBond() {
-    fetch('http://127.0.0.1:5000/relationship-score')
+    fetch('https://kinship-backend-oftd.onrender.com/relationship-score')
     .then(res => res.json())
     .then(data => {
         const score = data.score;

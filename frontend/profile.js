@@ -20,7 +20,7 @@ window.onload = () => {
   if (roleDisplay) roleDisplay.value = role || "";
 
   if (userId) {
-    fetch(`http://127.0.0.1:5000/get-profile/${userId}`)
+    fetch(`https://kinship-backend-oftd.onrender.com/get-profile/${userId}`)
     .then(res => res.json())
     .then(data => {
 
@@ -108,7 +108,7 @@ function saveToServer(userId, name, phone, photo) {
 
   if (!userId) return;
 
-  fetch("http://127.0.0.1:5000/save-profile", {
+  fetch("https://kinship-backend-oftd.onrender.com/save-profile", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({

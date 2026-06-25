@@ -12,7 +12,7 @@ async function generatePairCode() {
     }
 
     try {
-        const res = await fetch("http://127.0.0.1:5000/generate-code", {
+        const res = await fetch("https://kinship-backend-oftd.onrender.com/generate-code", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({ student_id: userId })
@@ -33,7 +33,7 @@ function sendCheckin(status) {
 
     const userId = localStorage.getItem("user_id");
 
-    fetch("http://127.0.0.1:5000/checkin", {
+    fetch("https://kinship-backend-oftd.onrender.com/checkin", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -65,7 +65,7 @@ function sendSOS() {
 
     const userId = localStorage.getItem("user_id");
 
-    fetch("http://127.0.0.1:5000/sos", {
+    fetch("https://kinship-backend-oftd.onrender.com/sos", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -82,7 +82,7 @@ function sendSOS() {
 }
     const userId = localStorage.getItem("user_id");
 
-    fetch("http://127.0.0.1:5000/sos", {
+    fetch("https://kinship-backend-oftd.onrender.com/sos", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -116,7 +116,7 @@ function checkConnection() {
 
     if (!userId) return;
 
-    fetch(`http://127.0.0.1:5000/check-connection/${userId}`)
+    fetch(`https://kinship-backend-oftd.onrender.com/check-connection/${userId}`)
     .then(res => res.json())
     .then(data => {
 
@@ -171,7 +171,7 @@ async function setupNotifications() {
 
         if (!userId) return;
 
-        await fetch("http://127.0.0.1:5000/save-token", {
+        await fetch("https://kinship-backend-oftd.onrender.com/save-token", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

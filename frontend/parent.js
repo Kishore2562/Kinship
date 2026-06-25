@@ -5,7 +5,7 @@ if (!role || role !== "parent") {
     window.location.href = "pin.html";
 }
 
-const socket = io("http://127.0.0.1:5000");
+const socket = io("https://kinship-backend-oftd.onrender.com");
 
 socket.on("connect", () => {
     console.log("🟢 SOCKET CONNECTED");
@@ -66,7 +66,7 @@ function checkConnection() {
 
     if (!userId) return;
 
-    fetch(`http://127.0.0.1:5000/check-connection/${userId}`)
+    fetch(`https://kinship-backend-oftd.onrender.com/check-connection/${userId}`)
     .then(res => res.json())
     .then(data => {
 
@@ -100,7 +100,7 @@ function loadCheckin() {
         return;
     }
 
-    fetch(`http://127.0.0.1:5000/latest-checkin/${parentId}`)
+    fetch(`https://kinship-backend-oftd.onrender.com/latest-checkin/${parentId}`)
 
         .then(res => res.json())
 
@@ -177,7 +177,7 @@ function showSOS(data) {
 
 function loadLastSOS() {
 
-    fetch("http://127.0.0.1:5000/latest-sos")
+    fetch("https://kinship-backend-oftd.onrender.com/latest-sos")
 
     .then(res => res.json())
 
@@ -203,7 +203,7 @@ function loadLastSOS() {
 }
 function viewSOSHistory() {
 
-    fetch("http://127.0.0.1:5000/sos-history")
+    fetch("https://kinship-backend-oftd.onrender.com/sos-history")
 
     .then(res => res.json())
 
@@ -254,7 +254,7 @@ function stopAlarm() {
 // ===================== RELATIONSHIP =====================
 function loadBond() {
 
-    fetch('http://127.0.0.1:5000/relationship-score')
+    fetch('https://kinship-backend-oftd.onrender.com/relationship-score')
 
         .then(res => res.json())
 
@@ -285,7 +285,7 @@ async function connectWithCode() {
         return;
     }
 
-    const res = await fetch("http://127.0.0.1:5000/connect-by-code", {
+    const res = await fetch("https://kinship-backend-oftd.onrender.com/connect-by-code", {
 
         method: "POST",
 

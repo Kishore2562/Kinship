@@ -22,7 +22,7 @@ function sendPuzzle() {
 
     reader.onload = function (e) {
 
-        fetch("http://127.0.0.1:5000/send-puzzle", {
+        fetch("https://kinship-backend-oftd.onrender.com/send-puzzle", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
@@ -41,7 +41,7 @@ function sendPuzzle() {
 // LOAD PUZZLE
 function loadPuzzle() {
 
-    fetch("http://127.0.0.1:5000/puzzles")
+    fetch("https://kinship-backend-oftd.onrender.com/puzzles")
     .then(res => res.json())
     .then(data => {
 
@@ -201,7 +201,7 @@ function sendResult() {
     const username = getUsername();
     const userId = localStorage.getItem("user_id");
 
-    fetch("http://127.0.0.1:5000/send-message", {
+    fetch("https://kinship-backend-oftd.onrender.com/send-message", {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({

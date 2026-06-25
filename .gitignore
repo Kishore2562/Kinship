@@ -3,4 +3,5 @@ backend/venv/
 __pycache__/
 *.pyc
 serviceAccount.json
-backend/database/kinship.db
+*.db
+backend/kinship_backup.db

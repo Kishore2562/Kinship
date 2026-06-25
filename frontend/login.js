@@ -23,7 +23,7 @@ function login() {
 
     const deviceId = getDeviceId();
 
-    fetch("http://127.0.0.1:5000/login", {
+    fetch("https://kinship-backend-oftd.onrender.com/login", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ email, device_id: deviceId })
@@ -49,7 +49,7 @@ function sendOTP() {
 
     const email = document.getElementById("email").value.trim();
 
-    fetch("http://127.0.0.1:5000/send-email-otp", {
+    fetch("https://kinship-backend-oftd.onrender.com/send-email-otp", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ email })
@@ -74,7 +74,7 @@ function verifyOTP() {
         return;
     }
 
-    fetch("http://127.0.0.1:5000/verify-email-otp", {
+    fetch("https://kinship-backend-oftd.onrender.com/verify-email-otp", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ email, otp, device_id: deviceId })
@@ -87,7 +87,7 @@ function verifyOTP() {
             return;
         }
 
-        fetch("http://127.0.0.1:5000/login", {
+        fetch("https://kinship-backend-oftd.onrender.com/login", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({ email, device_id: deviceId })
