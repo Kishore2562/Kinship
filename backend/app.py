@@ -76,20 +76,50 @@ def send_email_otp(email, otp):
 @app.route('/send-email-otp', methods=['POST'])
 def send_email_otp_route():
 
-    print("STEP 1")
+    try:
 
-    data = request.get_json()
+        print("STEP 1")
 
-    print("STEP 2")
+        data = request.get_json()
 
-    email = data.get('email')
+        print("STEP 2")
 
-    print("EMAIL =", email)
+        email = data.get('email')
 
-    return jsonify({
-        "message": "route reached"
-    })
+        print("EMAIL =", email)
 
+        otp = str(random.randint(1000, 9999))
+
+        print("OTP =", otp)
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO otp_codes (email, otp) VALUES (?, ?)",
+            (email, otp)
+        )
+
+        conn.commit()
+        conn.close()
+
+        print("OTP SAVED")
+
+        send_email_otp(email, otp)
+
+        print("EMAIL FUNCTION CALLED")
+
+        return jsonify({
+            "message": "OTP sent"
+        })
+
+    except Exception as e:
+
+        print("OTP ROUTE ERROR:", str(e))
+
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 @app.route('/verify-email-otp', methods=['POST'])
 def verify_email_otp():
