@@ -36,6 +36,28 @@ def smtp_test():
         "password_exists": bool(password)
     })
 
+@app.route("/smtp-connect")
+def smtp_connect():
+
+    try:
+
+        import socket
+
+        socket.create_connection(
+            ("smtp.gmail.com", 465),
+            timeout=10
+        )
+
+        return jsonify({
+            "status": "connected"
+        })
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
 @app.route("/gmail-test")
 def gmail_test():
 
