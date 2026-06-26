@@ -35,6 +35,13 @@ def smtp_test():
         "sender": sender,
         "password_exists": bool(password)
     })
+    
+@app.route("/crash-test")
+def crash_test():
+
+    print("CRASH TEST START")
+
+    raise Exception("TEST ERROR")
  
 def send_email_otp(email, otp):
 
