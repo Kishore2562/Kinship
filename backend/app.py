@@ -35,75 +35,15 @@ def smtp_test():
         "sender": sender,
         "password_exists": bool(password)
     })
-
+ 
 def send_email_otp(email, otp):
 
-    sender = os.environ.get("EMAIL_USER")
-    password = os.environ.get("EMAIL_PASS")
-
-    print("========== EMAIL DEBUG ==========")
+    print("========== EMAIL TEST ==========")
     print("EMAIL =", email)
-    print("SENDER =", sender)
-    print("PASSWORD EXISTS =", bool(password))
+    print("OTP =", otp)
 
-    try:
-
-        msg = MIMEText(f"""
-        <html>
-        <body style="font-family: Arial; background:#f4f6f8; padding:20px;">
-
-        <div style="max-width:500px; margin:auto; background:white; padding:20px; border-radius:10px;">
-
-        <h2 style="color:#2563eb;">Kinship 💙</h2>
-
-        <p>Hello 👋,</p>
-
-        <p>Welcome to <b>Kinship</b> — where connection meets care.</p>
-
-        <p>Your One-Time Password (OTP) is:</p>
-
-        <h1 style="letter-spacing:5px; color:#111;">{otp}</h1>
-
-        <p>This OTP is valid for 5 minutes.</p>
-
-        <hr>
-
-        <p style="font-size:12px; color:gray;">
-        If you didn't request this, please ignore this email.
-        </p>
-
-        <p style="font-size:12px; color:gray;">
-        — Team Kinship ❤️
-        </p>
-
-        </div>
-
-        </body>
-        </html>
-        """, "html")
-
-        msg["Subject"] = "🔐 Your Kinship Login Code"
-        msg["From"] = sender
-        msg["To"] = email
-
-        print("CONNECTING TO GMAIL")
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-
-            print("LOGGING IN")
-
-            server.login(sender, password)
-
-            print("SENDING EMAIL")
-
-            server.send_message(msg)
-
-        print("EMAIL SENT TO:", email)
-
-    except Exception as e:
-
-        print("EMAIL ERROR ❌:", str(e))
-
+    return
+   
 @app.route('/send-email-otp', methods=['POST'])
 def send_email_otp_route():
 
