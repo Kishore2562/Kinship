@@ -38,12 +38,43 @@ def smtp_test():
  
 def send_email_otp(email, otp):
 
-    print("========== EMAIL TEST ==========")
-    print("EMAIL =", email)
-    print("OTP =", otp)
+    sender = os.environ.get("EMAIL_USER")
+    password = os.environ.get("EMAIL_PASS")
 
-    return
-   
+    print("========== EMAIL DEBUG ==========")
+    print("EMAIL =", email)
+    print("SENDER =", sender)
+    print("PASSWORD EXISTS =", bool(password))
+
+    try:
+
+        msg = MIMEText(
+            f"Your Kinship OTP is {otp}",
+            "plain"
+        )
+
+        msg["Subject"] = "Kinship OTP"
+        msg["From"] = sender
+        msg["To"] = email
+
+        print("CONNECTING TO GMAIL")
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as server:
+
+            print("LOGGING IN")
+
+            server.login(sender, password)
+
+            print("SENDING EMAIL")
+
+            server.send_message(msg)
+
+        print("EMAIL SENT TO:", email)
+
+    except Exception as e:
+
+        print("EMAIL ERROR ❌:", str(e))
+        raise   
 @app.route('/send-email-otp', methods=['POST'])
 def send_email_otp_route():
 
