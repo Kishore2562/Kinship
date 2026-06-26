@@ -26,9 +26,16 @@ def test():
     return jsonify({"status":"ok"})
 
 def send_email_otp(email, otp):
+
+    sender = os.environ.get("EMAIL_USER")
+    password = os.environ.get("EMAIL_PASS")
+
+    print("========== EMAIL DEBUG ==========")
+    print("EMAIL =", email)
+    print("SENDER =", sender)
+    print("PASSWORD EXISTS =", bool(password))
+
     try:
-        sender = os.environ.get("EMAIL_USER")
-        password = os.environ.get("EMAIL_PASS")
 
         msg = MIMEText(f"""
         <html>
