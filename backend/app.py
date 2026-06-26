@@ -9,13 +9,17 @@ import smtplib
 import os
 app = Flask(__name__)
 
-# ✅ FIXED CORS (ONLY THIS — remove previous 
+# ✅ FIXED CORS (ONLY THIS — remove previou 
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(
     app,
     cors_allowed_origins="*"
 )
-
+@app.route('/version')
+def version():
+    return jsonify({
+        "version": "OTP_DEBUG_26_JUNE"
+    })
 @app.route('/test')
 def test():
     print("TEST ROUTE HIT")
@@ -60,19 +64,28 @@ def send_email_otp(email, otp):
         </html>
         """, "html")
 
-        msg['Subject'] = "🔐 Your Kinship Login Code"
-        msg['From'] = sender
-        msg['To'] = email
+        msg["Subject"] = "🔐 Your Kinship Login Code"
+        msg["From"] = sender
+        msg["To"] = email
 
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        print("CONNECTING TO GMAIL")
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+
+            print("LOGGING IN")
+
             server.login(sender, password)
+
+            print("SENDING EMAIL")
+
             server.send_message(msg)
 
         print("EMAIL SENT TO:", email)
 
     except Exception as e:
-        print("EMAIL ERROR ❌:", e)
-        
+
+        print("EMAIL ERROR ❌:", str(e))
+
 @app.route('/send-email-otp', methods=['POST'])
 def send_email_otp_route():
 
@@ -132,7 +145,7 @@ def verify_email_otp():
         otp = data.get('otp')
         device_id = data.get('device_id')
 
-        conn = get_db_connection()
+        conn = get_db_connection() 
         cursor = conn.cursor()
 
         cursor.execute("""
@@ -881,7 +894,8 @@ if __name__ == '__main__':
 
     port = int(os.environ.get("PORT", 5000))
 
-    app.run(
+    socketio.run(
+        app,
         host="0.0.0.0",
         port=port
     )
