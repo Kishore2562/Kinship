@@ -1,11 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
-from email.mime.text import MIMEText
 from flask_socketio import SocketIO, emit
 import sqlite3
 import random
-import smtplib
+import requests
 import os
 app = Flask(__name__)
 
@@ -15,121 +14,148 @@ socketio = SocketIO(
     app,
     cors_allowed_origins="*"
 )
-@app.route('/version')
-def version():
-    return jsonify({
-        "version": "OTP_DEBUG_26_JUNE"
-    })
-@app.route('/test')
-def test():
-    print("TEST ROUTE HIT")
-    return jsonify({"status":"ok"})
 
-@app.route("/smtp-test")
-def smtp_test():
-
-    sender = os.environ.get("EMAIL_USER")
-    password = os.environ.get("EMAIL_PASS")
-
-    return jsonify({
-        "sender": sender,
-        "password_exists": bool(password)
-    })
-
-@app.route("/smtp-connect")
-def smtp_connect():
-
-    try:
-
-        import socket
-
-        socket.create_connection(
-            ("smtp.gmail.com", 465),
-            timeout=10
-        )
-
-        return jsonify({
-            "status": "connected"
-        })
-
-    except Exception as e:
-
-        return jsonify({
-            "error": str(e)
-        }), 500
-
-@app.route("/gmail-test")
-def gmail_test():
-
-    import socket
-
-    try:
-
-        socket.create_connection(
-            ("smtp.gmail.com", 465),
-            timeout=10
-        )
-
-        return jsonify({
-            "status": "CONNECTED"
-        })
-
-    except Exception as e:
-
-        return jsonify({
-            "error": str(e)
-        }), 500
-
-@app.route("/crash-test")
-def crash_test():
-
-    print("CRASH TEST START")
-
-    raise Exception("TEST ERROR")
- 
 def send_email_otp(email, otp):
 
-    sender = os.environ.get("EMAIL_USER")
-    password = os.environ.get("EMAIL_PASS")
+    api_key = os.environ.get("BREVO_API_KEY")
 
-    print("========== EMAIL DEBUG ==========", flush=True)
+    print("========== BREVO EMAIL ==========", flush=True)
     print("EMAIL =", email, flush=True)
-    print("SENDER =", sender, flush=True)
-    print("PASSWORD EXISTS =", bool(password), flush=True)
+    print("OTP =", otp, flush=True)
+    print("API KEY EXISTS =", bool(api_key), flush=True)
 
-    try:
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json"
+    }
 
-        msg = MIMEText(
-            f"Your Kinship OTP is {otp}",
-            "plain"
-        )
+    payload = {
+        "sender": {
+            "name": "Kinship",
+            "email": "thekishverse@gmail.com"
+        },
+        "to": [
+            {
+                "email": email
+            }
+        ],
+        "subject": "🔐 Your Kinship Login Code",
+        "htmlContent": f"""
+        <html>
+        <body style="
+            margin:0;
+            padding:20px;
+            background:#f4f6f8;
+            font-family:Arial,sans-serif;
+        ">
 
-        msg["Subject"] = "Kinship OTP"
-        msg["From"] = sender
-        msg["To"] = email
+            <div style="
+                max-width:550px;
+                margin:auto;
+                background:#ffffff;
+                border-radius:14px;
+                overflow:hidden;
+                box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            ">
 
-        print("CONNECTING TO GMAIL", flush=True)
+                <div style="
+                    background:#2563eb;
+                    color:white;
+                    padding:20px;
+                    text-align:center;
+                ">
+                    <h1 style="margin:0;">
+                        Kinship 💙
+                    </h1>
+                    <p style="margin-top:8px;">
+                        Bonds Beyond The Boundaries
+                    </p>
+                </div>
 
-        with smtplib.SMTP_SSL(
-            "smtp.gmail.com",
-            465,
-            timeout=20
-        ) as server:
+                <div style="padding:25px;">
 
-            print("LOGGING IN", flush=True)
+                    <p>Hello 👋,</p>
 
-            server.login(sender, password)
+                    <p>
+                        Welcome to <b>Kinship</b>.
+                    </p>
 
-            print("SENDING EMAIL", flush=True)
+                    <p>
+                        Use the OTP below to continue login:
+                    </p>
 
-            server.send_message(msg)
+                    <div style="
+                        text-align:center;
+                        margin:30px 0;
+                    ">
+                        <span style="
+                            font-size:36px;
+                            letter-spacing:8px;
+                            font-weight:bold;
+                            color:#111827;
+                        ">
+                            {otp}
+                        </span>
+                    </div>
 
-        print("EMAIL SENT TO:", email, flush=True)
+                    <p>
+                        This OTP is valid for <b>5 minutes</b>.
+                    </p>
 
-    except Exception as e:
+                    <hr>
 
-        print("EMAIL ERROR ❌:", str(e), flush=True)
-        raise
+                    <p style="
+                        color:#6b7280;
+                        font-size:12px;
+                    ">
+                        If you didn't request this OTP,
+                        simply ignore this email.
+                    </p>
+
+                    <p style="
+                        color:#6b7280;
+                        font-size:12px;
+                    ">
+                        Team Kinship ❤️
+                    </p>
+
+                </div>
+
+            </div>
+
+        </body>
+        </html>
+        """
+    }
+
+    response = requests.post(
+        "https://api.brevo.com/v3/smtp/email",
+        headers=headers,
+        json=payload,
+        timeout=20
+    )
+
+    print(
+        "BREVO STATUS =",
+        response.status_code,
+        flush=True
+    )
+
+    print(
+        "BREVO RESPONSE =",
+        response.text,
+        flush=True
+    )
+
+    if response.status_code not in [200, 201]:
+        raise Exception(response.text)
+
+    print(
+        "EMAIL SENT SUCCESSFULLY",
+        flush=True
+    )
+
 @app.route('/send-email-otp', methods=['POST'])
 def send_email_otp_route():
 
