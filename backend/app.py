@@ -35,7 +35,29 @@ def smtp_test():
         "sender": sender,
         "password_exists": bool(password)
     })
-    
+
+@app.route("/gmail-test")
+def gmail_test():
+
+    import socket
+
+    try:
+
+        socket.create_connection(
+            ("smtp.gmail.com", 465),
+            timeout=10
+        )
+
+        return jsonify({
+            "status": "CONNECTED"
+        })
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
 @app.route("/crash-test")
 def crash_test():
 
@@ -48,10 +70,10 @@ def send_email_otp(email, otp):
     sender = os.environ.get("EMAIL_USER")
     password = os.environ.get("EMAIL_PASS")
 
-    print("========== EMAIL DEBUG ==========")
-    print("EMAIL =", email)
-    print("SENDER =", sender)
-    print("PASSWORD EXISTS =", bool(password))
+    print("========== EMAIL DEBUG ==========", flush=True)
+    print("EMAIL =", email, flush=True)
+    print("SENDER =", sender, flush=True)
+    print("PASSWORD EXISTS =", bool(password), flush=True)
 
     try:
 
@@ -64,42 +86,46 @@ def send_email_otp(email, otp):
         msg["From"] = sender
         msg["To"] = email
 
-        print("CONNECTING TO GMAIL")
+        print("CONNECTING TO GMAIL", flush=True)
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as server:
+        with smtplib.SMTP_SSL(
+            "smtp.gmail.com",
+            465,
+            timeout=20
+        ) as server:
 
-            print("LOGGING IN")
+            print("LOGGING IN", flush=True)
 
             server.login(sender, password)
 
-            print("SENDING EMAIL")
+            print("SENDING EMAIL", flush=True)
 
             server.send_message(msg)
 
-        print("EMAIL SENT TO:", email)
+        print("EMAIL SENT TO:", email, flush=True)
 
     except Exception as e:
 
-        print("EMAIL ERROR ❌:", str(e))
-        raise   
+        print("EMAIL ERROR ❌:", str(e), flush=True)
+        raise
 @app.route('/send-email-otp', methods=['POST'])
 def send_email_otp_route():
 
     try:
 
-        print("STEP 1")
+        print("STEP 1", flush=True)
 
         data = request.get_json()
 
-        print("STEP 2")
+        print("STEP 2", flush=True)
 
         email = data.get('email')
 
-        print("EMAIL =", email)
+        print("EMAIL =", email, flush=True)
 
         otp = str(random.randint(1000, 9999))
 
-        print("OTP =", otp)
+        print("OTP =", otp, flush=True)
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -112,11 +138,11 @@ def send_email_otp_route():
         conn.commit()
         conn.close()
 
-        print("OTP SAVED")
+        print("OTP SAVED", flush=True)
 
         send_email_otp(email, otp)
 
-        print("EMAIL FUNCTION CALLED")
+        print("EMAIL FUNCTION CALLED", flush=True)
 
         return jsonify({
             "message": "OTP sent"
@@ -124,7 +150,7 @@ def send_email_otp_route():
 
     except Exception as e:
 
-        print("OTP ROUTE ERROR:", str(e))
+        print("OTP ROUTE ERROR:", str(e), flush=True)
 
         return jsonify({
             "error": str(e)
@@ -884,7 +910,7 @@ def handle_disconnect():
     print("🔴 CLIENT DISCONNECTED")
 
 # ---------------- RUN ----------------
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     init_db()
 
@@ -893,5 +919,6 @@ if __name__ == '__main__':
     socketio.run(
         app,
         host="0.0.0.0",
-        port=port
+        port=port,
+        debug=False
     )
