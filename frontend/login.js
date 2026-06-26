@@ -51,17 +51,34 @@ function sendOTP() {
 
     fetch("https://kinship-backend-oftd.onrender.com/send-email-otp", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ email })
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email
+        })
     })
-    .then(() => {
-        document.getElementById("msg").textContent = "OTP sent to email";
+    .then(async res => {
+
+        const text = await res.text();
+
+        console.log("STATUS:", res.status);
+        console.log("RESPONSE:", text);
+
+        if (!res.ok) {
+            throw new Error(text);
+        }
+
+        document.getElementById("msg").textContent =
+            "OTP sent to email";
     })
-    .catch(() => {
+    .catch(err => {
+
+        console.error(err);
+
         alert("Failed to send OTP");
     });
 }
-
 // ---------------- VERIFY OTP ----------------
 function verifyOTP() {
 
