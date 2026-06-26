@@ -25,6 +25,17 @@ def test():
     print("TEST ROUTE HIT")
     return jsonify({"status":"ok"})
 
+@app.route("/smtp-test")
+def smtp_test():
+
+    sender = os.environ.get("EMAIL_USER")
+    password = os.environ.get("EMAIL_PASS")
+
+    return jsonify({
+        "sender": sender,
+        "password_exists": bool(password)
+    })
+
 def send_email_otp(email, otp):
 
     sender = os.environ.get("EMAIL_USER")
