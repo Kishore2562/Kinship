@@ -195,37 +195,62 @@ function finishPuzzle() {
 }
 
 // SEND RESULT
-// SEND RESULT
 function sendResult() {
 
     const username = getUsername();
     const userId = localStorage.getItem("user_id");
 
-    fetch("https://kinship-backend-oftd.onrender.com/send-message", {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-            sender_id: userId,
-            sender_name: username,
-            message:  `Completed in ${window.puzzleTime}s at ${formatTimeSmart(new Date())}`
-        })
-    })
+    const now = new Date().toLocaleString();
+
+    fetch(
+        "https://kinship-backend-oftd.onrender.com/send-message",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                sender_id: userId,
+                sender_name: username,
+                message:
+                    `🧩 Puzzle completed in ${window.puzzleTime} seconds at ${now}`
+            })
+        }
+    )
+
     .then(() => {
 
-        // ✅ SHOW NOTIFICATION HERE
-        showNotification("Result sent to chat 🧩", "success");
+        showNotification(
+            "Result sent to chat 🧩",
+            "success"
+        );
 
-        // ⏳ small delay so user can SEE it
         setTimeout(() => {
 
-            const role = sessionStorage.getItem("role");
+            const role =
+                sessionStorage.getItem("role");
 
             if (role === "parent") {
-                window.location.href = "parent-chat.html";
+
+                window.location.href =
+                    "parent-chat.html";
+
             } else {
-                window.location.href = "student-chat.html";
+
+                window.location.href =
+                    "student-chat.html";
             }
 
-        }, 1000); // 1 second delay
+        }, 1000);
+
+    })
+
+    .catch(err => {
+
+        console.log(err);
+
+        alert("Failed to send result");
+
     });
+
 }
