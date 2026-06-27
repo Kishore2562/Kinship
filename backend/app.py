@@ -395,30 +395,63 @@ def checkin():
 # ---------------- GENERATE CODE ----------------
 @app.route('/generate-code', methods=['POST'])
 def generate_code():
-    try:
-        data = request.get_json()
-        student_id = data.get('student_id')
 
-        code = "KIN" + str(random.randint(1000, 9999))
+    try:
+
+        data = request.get_json()
+
+        student_id = data.get('student_id')
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute("DELETE FROM pair_codes WHERE student_id=?", (student_id,))
+        # ✅ Already connected?
+        cursor.execute("""
+            SELECT *
+            FROM connections
+            WHERE student_id=?
+        """, (student_id,))
+
+        existing = cursor.fetchone()
+
+        if existing:
+
+            conn.close()
+
+            return jsonify({
+                "error": "Already connected to a parent"
+            }), 400
+
+        code = "KIN" + str(random.randint(1000, 9999))
+
         cursor.execute(
-            "INSERT INTO pair_codes (code, student_id) VALUES (?, ?)",
+            "DELETE FROM pair_codes WHERE student_id=?",
+            (student_id,)
+        )
+
+        cursor.execute(
+            """
+            INSERT INTO pair_codes
+            (code, student_id)
+            VALUES (?, ?)
+            """,
             (code, student_id)
         )
 
         conn.commit()
         conn.close()
 
-        return jsonify({"code": code})
+        return jsonify({
+            "code": code
+        })
 
     except Exception as e:
-        print("PAIR ERROR:", e)
-        return jsonify({"error": "Server error"}), 500
 
+        print("PAIR ERROR:", str(e))
+
+        return jsonify({
+            "error": "Server error"
+        }), 500
 # ---------------- CONNECT ----------------
 @app.route('/connect-by-code', methods=['POST'])
 def connect_by_code():

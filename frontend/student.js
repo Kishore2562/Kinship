@@ -1,6 +1,5 @@
 // ===================== ROLE PROTECTION =====================
 const role = sessionStorage.getItem("role");
-
 // ===================== GENERATE CODE =====================
 async function generatePairCode() {
 
@@ -12,22 +11,49 @@ async function generatePairCode() {
     }
 
     try {
-        const res = await fetch("https://kinship-backend-oftd.onrender.com/generate-code", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ student_id: userId })
-        });
+
+        const res = await fetch(
+            "https://kinship-backend-oftd.onrender.com/generate-code",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    student_id: userId
+                })
+            }
+        );
 
         const data = await res.json();
 
-        document.getElementById("pairCodeDisplay").innerText = data.code;
-        document.getElementById("generateBtn").disabled = true;
+        if (!res.ok) {
 
-    } catch {
+            alert(
+                data.error ||
+                data.message ||
+                "Unable to generate code"
+            );
+
+            return;
+        }
+
+        document.getElementById(
+            "pairCodeDisplay"
+        ).innerText = data.code;
+
+        document.getElementById(
+            "generateBtn"
+        ).disabled = true;
+
+    } catch (err) {
+
+        console.log(err);
+
         alert("Server error");
+
     }
 }
-
 // ===================== CHECK-IN =====================
 function sendCheckin(status) {
 
