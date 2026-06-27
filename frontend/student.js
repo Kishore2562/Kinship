@@ -49,51 +49,59 @@ function sendCheckin(status) {
 }
 
 // ===================== SOS =====================
-function sendSOS() {
-
-
-    let sosSending = false;
+let sosSending = false;
 
 function sendSOS() {
 
     if (sosSending) {
-        console.log("SOS already sending");
         return;
     }
 
     sosSending = true;
 
-    const userId = localStorage.getItem("user_id");
+    const userId =
+        localStorage.getItem("user_id");
 
-    fetch("https://kinship-backend-oftd.onrender.com/sos", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            triggered_by: "Student " + userId
-        })
-    })
-    .finally(() => {
-        setTimeout(() => {
-            sosSending = false;
-        }, 3000);
-    });
-}
-    const userId = localStorage.getItem("user_id");
-
-    fetch("https://kinship-backend-oftd.onrender.com/sos", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            triggered_by: "Student " + userId
-        })
-    })
-    .then(() => {
-        if (typeof showNotification === "function") {
-            showNotification("SOS sent 🚨", "error");
+    fetch(
+        "https://kinship-backend-oftd.onrender.com/sos",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+            body: JSON.stringify({
+                triggered_by:
+                    "Student " + userId
+            })
         }
+    )
+
+    .then(() => {
+
+        if (
+            typeof showNotification ===
+            "function"
+        ) {
+
+            showNotification(
+                "SOS sent 🚨",
+                "error"
+            );
+        }
+
+    })
+
+    .finally(() => {
+
+        setTimeout(() => {
+
+            sosSending = false;
+
+        }, 3000);
+
     });
+
 }
 
 // ===================== NAVIGATION =====================
@@ -116,17 +124,38 @@ function checkConnection() {
 
     if (!userId) return;
 
-    fetch(`https://kinship-backend-oftd.onrender.com/check-connection/${userId}`)
+    fetch(
+        `https://kinship-backend-oftd.onrender.com/check-connection/${userId}`
+    )
     .then(res => res.json())
     .then(data => {
 
         if (data.connected) {
 
-            localStorage.setItem("paired", "true");
+            localStorage.setItem(
+                "paired",
+                "true"
+            );
 
-            const btn = document.getElementById("generateBtn");
-            if (btn) btn.style.display = "none";
+            const pairSection =
+                document.getElementById(
+                    "pairSection"
+                );
+
+            if (pairSection) {
+
+                pairSection.style.display =
+                    "none";
+            }
         }
+    })
+    .catch(err => {
+
+        console.log(
+            "Connection check failed:",
+            err
+        );
+
     });
 }
 
@@ -157,39 +186,6 @@ function logout() {
     window.location.href = "login.html";
 }
 
-async function setupNotifications() {
-
-    try {
-
-        const token = await getFirebaseToken();
-
-        console.log("STUDENT TOKEN:", token);
-
-        if (!token) return;
-
-        const userId = localStorage.getItem("user_id");
-
-        if (!userId) return;
-
-        await fetch("https://kinship-backend-oftd.onrender.com/save-token", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                user_id: userId,
-                token: token
-            })
-        });
-
-        console.log("✅ STUDENT TOKEN SAVED");
-
-    } catch (err) {
-
-        console.log("Student notification error:", err);
-    }
-}
-
 // ===================== GLOBAL FIX =====================
 window.generatePairCode = generatePairCode;
 window.sendCheckin = sendCheckin;
@@ -200,9 +196,11 @@ window.openProfile = openProfile;
 window.logout = logout;
 
 // ===================== LOAD =====================
-window.onload = async () => {
+// ===================== LOAD =====================
+window.onload = () => {
+
     loadProfileHeader();
+
     checkConnection();
 
-    await setupNotifications();
 };
