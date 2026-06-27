@@ -197,10 +197,10 @@ function finishPuzzle() {
 // SEND RESULT
 function sendResult() {
 
+    alert("SEND RESULT CLICKED");
+
     const username = getUsername();
     const userId = localStorage.getItem("user_id");
-
-    const now = new Date().toLocaleString();
 
     fetch(
         "https://kinship-backend-oftd.onrender.com/send-message",
@@ -213,35 +213,30 @@ function sendResult() {
                 sender_id: userId,
                 sender_name: username,
                 message:
-                    `🧩 Puzzle completed in ${window.puzzleTime} seconds at ${now}`
+                    "🧩 Puzzle completed in " +
+                    window.puzzleTime +
+                    " seconds"
             })
         }
     )
 
     .then(() => {
 
-        showNotification(
-            "Result sent to chat 🧩",
-            "success"
-        );
+        alert("MESSAGE SAVED");
 
-        setTimeout(() => {
+        const role =
+            sessionStorage.getItem("role");
 
-            const role =
-                sessionStorage.getItem("role");
+        if (role === "parent") {
 
-            if (role === "parent") {
+            window.location.href =
+                "parent-chat.html";
 
-                window.location.href =
-                    "parent-chat.html";
+        } else {
 
-            } else {
-
-                window.location.href =
-                    "student-chat.html";
-            }
-
-        }, 1000);
+            window.location.href =
+                "student-chat.html";
+        }
 
     })
 
@@ -249,7 +244,7 @@ function sendResult() {
 
         console.log(err);
 
-        alert("Failed to send result");
+        alert("FAILED");
 
     });
 
