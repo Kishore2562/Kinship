@@ -31,7 +31,7 @@ function sendPuzzle() {
             })
         })
         .then(() => {
-            showNotification("Puzzle Sent🧩", "success");
+            showNotification("Puzzle Sent", "success");
         });
     };
 
@@ -153,7 +153,7 @@ function startTimer() {
 
     timerInterval = setInterval(() => {
         const seconds = Math.floor((Date.now() - startTime) / 1000);
-        document.getElementById("timer").innerText = "⏱️ Time: " + seconds + "s";
+        document.getElementById("timer").innerText = " Time: " + seconds + "s";
     }, 1000);
 }
 
@@ -197,8 +197,6 @@ function finishPuzzle() {
 // SEND RESULT
 function sendResult() {
 
-    alert("SEND RESULT CLICKED");
-
     const username = getUsername();
     const userId = localStorage.getItem("user_id");
 
@@ -213,7 +211,7 @@ function sendResult() {
                 sender_id: userId,
                 sender_name: username,
                 message:
-                    "🧩 Puzzle completed in " +
+                    "Puzzle completed in " +
                     window.puzzleTime +
                     " seconds"
             })
@@ -222,21 +220,28 @@ function sendResult() {
 
     .then(() => {
 
-        alert("MESSAGE SAVED");
+        showNotification(
+            "Result sent to chat",
+            "success"
+        );
 
-        const role =
-            sessionStorage.getItem("role");
+        setTimeout(() => {
 
-        if (role === "parent") {
+            const role =
+                sessionStorage.getItem("role");
 
-            window.location.href =
-                "parent-chat.html";
+            if (role === "parent") {
 
-        } else {
+                window.location.href =
+                    "parent-chat.html";
 
-            window.location.href =
-                "student-chat.html";
-        }
+            } else {
+
+                window.location.href =
+                    "student-chat.html";
+            }
+
+        }, 1000);
 
     })
 
@@ -244,7 +249,7 @@ function sendResult() {
 
         console.log(err);
 
-        alert("FAILED");
+        alert("Failed to send result");
 
     });
 
