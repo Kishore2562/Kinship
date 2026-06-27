@@ -72,7 +72,7 @@ function handlePin() {
 
         if (!userId) {
             errorText.innerText = "Login expired. Please login again.";
-            window.location.href = "login.html";
+            window.location.href = "index.html";
             return;
         }
 
