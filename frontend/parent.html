@@ -27,8 +27,7 @@
 <h2>👨‍👩‍👦 Parent Dashboard</h2>
 
 <script>
-if (!sessionStorage.getItem("kinship_unlocked")) {
-    sessionStorage.setItem("kinship_target", window.location.href);
+if (!localStorage.getItem("user_id")) {
     window.location.href = "index.html";
 }
 </script>

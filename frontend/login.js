@@ -1,4 +1,10 @@
-
+// AUTO LOGIN
+if (
+    localStorage.getItem("user_id") &&
+    localStorage.getItem("role")
+) {
+    window.location.href = "pin.html";
+}
 // ---------------- DEVICE ----------------
 function getDeviceId() {
     let deviceId = localStorage.getItem("device_id");

@@ -1,3 +1,8 @@
+if (
+    !localStorage.getItem("user_id")
+) {
+    window.location.href = "index.html";
+}
 // ===================== ROLE PROTECTION =====================
 const role = sessionStorage.getItem("role");
 // ===================== GENERATE CODE =====================

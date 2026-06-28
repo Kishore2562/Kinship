@@ -1,7 +1,7 @@
-// ===================== ROLE PROTECTION =====================
-const role = sessionStorage.getItem("role");
+const role =
+    localStorage.getItem("role");
 
-if (!role || role !== "parent") {
+if (role !== "parent") {
     window.location.href = "pin.html";
 }
 
@@ -347,6 +347,9 @@ function loadProfileHeader() {
 
 // ===================== LOGOUT =====================
 function logout() {
+
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("role");
 
     sessionStorage.clear();
 

@@ -4,6 +4,10 @@ const infoText = document.getElementById("infoText");
 const errorText = document.getElementById("error");
 const savedRole = localStorage.getItem("role");
 
+if(localStorage.getItem("user_id")){
+    document.getElementById("switchBtn").style.display="block";
+}
+
 if (savedRole) {
     document.getElementById("role").style.display = "none";
 }
