@@ -41,11 +41,11 @@ h2 {
 
 /* ---------- Container ---------- */
 .container {
+    width: 100%;
     max-width: 500px;
-    margin: auto;
-    padding: var(--space-md);
+    margin: 0 auto;
+    padding: 20px;
 }
-
 /* ---------- Card ---------- */
 .card {
     background: var(--card);
@@ -89,7 +89,10 @@ button:hover {
 }
 
 /* ---------- Inputs ---------- */
-input[type="text"] {
+input,
+input[type="text"],
+input[type="email"],
+input[type="password"] {
     width: 100%;
     padding: 12px;
     margin-bottom: var(--space-sm);
@@ -97,8 +100,8 @@ input[type="text"] {
     border: 1px solid var(--muted);
     background: #111827;
     color: var(--text);
+    font-size: 16px;
 }
-
 /* ---------- Chat Box ---------- */
 #chatBox {
     background-color: var(--card);
@@ -294,13 +297,37 @@ input[type="text"] {
 }
 
 /* ---------- Mobile ---------- */
-@media (max-width: 500px) {
+@media (max-width: 768px) {
+
     body {
-        padding: 10px;
+        padding: 15px;
     }
 
     .container {
-        padding: 10px;
+        width: 100%;
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    button {
+        font-size: 16px;
+        min-height: 48px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    #chatBox {
+        height: 300px;
+    }
+
+    .message {
+        max-width: 85%;
     }
 }
 .sos-card{
