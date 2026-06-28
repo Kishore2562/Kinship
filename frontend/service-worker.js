@@ -5,5 +5,3 @@ self.addEventListener("install", () => {
 self.addEventListener("activate", () => {
     console.log("Kinship Active");
 });
-
-self.addEventListener("fetch", () => {});

@@ -325,25 +325,26 @@ input[type="password"] {
     }
 
     .card {
+        width: 100%;
         padding: 14px;
         margin-bottom: 12px;
     }
 
     button {
-        font-size: 16px;
         min-height: 50px;
+        font-size: 16px;
     }
 
     h2 {
         font-size: 24px;
     }
 
-    #chatBox {
-        height: 300px;
-    }
-
     .message {
         max-width: 85%;
+    }
+
+    #chatBox {
+        height: 300px;
     }
 
     #profileIcon {
@@ -357,14 +358,30 @@ input[type="password"] {
         left: 0;
         width: 100%;
         display: flex;
-        gap: 0;
         background: #1E293B;
         z-index: 999;
     }
 
     .nav button {
+        flex: 1;
         margin: 0;
         border-radius: 0;
+    }
+}
+@media (min-width: 769px) {
+
+    .container {
+        max-width: 900px;
+    }
+
+    .card {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #chatBox {
+        height: 500px;
     }
 }
 
