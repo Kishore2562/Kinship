@@ -66,7 +66,11 @@ function createPuzzle(img) {
     board.innerHTML = "";
 
     const size = 3;
-    const baseSize = 300;
+    const baseSize =
+        Math.min(
+            window.innerWidth - 40,
+            500
+        );
 
     const aspectRatio = img.width / img.height;
 

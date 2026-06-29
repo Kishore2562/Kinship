@@ -4,7 +4,7 @@ if (
     window.location.href = "index.html";
 }
 // ===================== ROLE PROTECTION =====================
-const role = sessionStorage.getItem("role");
+const role = localStorage.getItem("role");
 // ===================== GENERATE CODE =====================
 async function generatePairCode() {
 
@@ -212,9 +212,14 @@ function loadProfileHeader() {
 }
 
 // ===================== LOGOUT =====================
-function logout() {
+function logout(){
+
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("role");
+
     sessionStorage.clear();
-    window.location.href = "index.html";
+
+    window.location.href="index.html";
 }
 
 // ===================== GLOBAL FIX =====================

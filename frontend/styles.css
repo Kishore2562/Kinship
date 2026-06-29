@@ -117,7 +117,7 @@ input[type="password"] {
     padding: 10px 12px;
     margin: 6px 0;
     border-radius: 12px;
-    max-width: 70%;
+    max-width:85%;
     line-height: 1.4;
 }
 
@@ -381,7 +381,7 @@ input[type="password"] {
     }
 
     #chatBox {
-        height: 500px;
+        height:55vh;
     }
 }
 
@@ -391,4 +391,9 @@ input[type="password"] {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:15px;
 }

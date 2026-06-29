@@ -634,11 +634,20 @@ def sos():
 
         triggered_by = data.get("triggered_by")
 
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        current_time = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
+
+        student_id = (
+            triggered_by
+            .replace("Student ", "")
+            .strip()
+        )
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # SAVE SOS
         cursor.execute(
             """
             INSERT INTO sos_events
@@ -651,6 +660,7 @@ def sos():
             )
         )
 
+        # KEEP LAST 5 SOS
         cursor.execute("""
             DELETE FROM sos_events
             WHERE id NOT IN (
@@ -661,33 +671,78 @@ def sos():
             )
         """)
 
+        # FIND CONNECTED PARENT
+        cursor.execute("""
+            SELECT parent_id
+            FROM connections
+            WHERE student_id=?
+            ORDER BY id DESC
+            LIMIT 1
+        """, (student_id,))
+
+        parent = cursor.fetchone()
+
         conn.commit()
-
-        socketio.emit(
-            "sos_alert",
-            {
-                "triggered_by": triggered_by,
-                "time": current_time
-            }
-        )
-
         conn.close()
 
-        print("🚨 SOS SAVED:", triggered_by)
-        print("🕒 SOS TIME:", current_time)
-        print("📡 SOS EMITTED")
+        # SEND TO SPECIFIC PARENT
+        if parent:
+
+            parent_id = str(
+                parent["parent_id"]
+            )
+
+            parent_sid = connected_users.get(
+                parent_id
+            )
+
+            if parent_sid:
+
+                socketio.emit(
+                    "sos_alert",
+                    {
+                        "triggered_by": triggered_by,
+                        "time": current_time
+                    },
+                    room=parent_sid
+                )
+
+                print(
+                    f"🚨 SOS SENT TO PARENT {parent_id}"
+                )
+
+            else:
+
+                print(
+                    f"⚠️ PARENT {parent_id} NOT ONLINE"
+                )
+
+        else:
+
+            print(
+                f"⚠️ NO PARENT CONNECTED FOR STUDENT {student_id}"
+            )
+
+        print(
+            f"🚨 SOS SAVED: {triggered_by}"
+        )
 
         return jsonify({
-            "status": "SOS sent"
+            "success": True,
+            "message": "SOS sent"
         })
 
     except Exception as e:
 
-        print("SOS ERROR:", e)
+        print(
+            f"❌ SOS ERROR: {e}"
+        )
 
         return jsonify({
+            "success": False,
             "error": str(e)
         }), 500
+        
 @app.route('/latest-sos', methods=['GET'])
 def latest_sos():
 
@@ -978,17 +1033,55 @@ def get_profile(user_id):
 
     return jsonify({
         "name": row["name"],
+        "phone": row["phone"],
         "photo": row["photo"]
     })
 
+# ================= SOCKET USER MAP =================
+# ================= SOCKET USER MAP =================
+
+connected_users = {}
+
+@socketio.on("register")
+def register(data):
+
+    user_id = str(
+        data.get("user_id")
+    )
+
+    connected_users[user_id] = request.sid
+
+    print(
+        f"✅ REGISTERED USER {user_id} -> {request.sid}"
+    )
+
+
 @socketio.on("connect")
 def handle_connect():
-    print("🟢 CLIENT CONNECTED")
+
+    print(
+        f"🟢 CLIENT CONNECTED {request.sid}"
+    )
 
 
 @socketio.on("disconnect")
 def handle_disconnect():
-    print("🔴 CLIENT DISCONNECTED")
+
+    sid = request.sid
+
+    for user_id, stored_sid in list(
+        connected_users.items()
+    ):
+
+        if stored_sid == sid:
+
+            del connected_users[user_id]
+
+            print(
+                f"🔴 USER {user_id} DISCONNECTED"
+            )
+
+            break
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":

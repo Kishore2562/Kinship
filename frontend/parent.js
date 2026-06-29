@@ -6,9 +6,31 @@ if (role !== "parent") {
 }
 
 const socket = io("https://kinship-backend-oftd.onrender.com");
+const socket = io(
+    "https://kinship-backend-oftd.onrender.com"
+);
 
 socket.on("connect", () => {
+
     console.log("🟢 SOCKET CONNECTED");
+
+    const userId =
+        localStorage.getItem("user_id");
+
+    if (userId) {
+
+        socket.emit(
+            "register",
+            {
+                user_id: userId
+            }
+        );
+
+        console.log(
+            "🟢 REGISTERED:",
+            userId
+        );
+    }
 });
 
 socket.on("sos_alert", data => {
@@ -18,7 +40,6 @@ socket.on("sos_alert", data => {
     loadLastSOS();
 
 });
-
 socket.on("checkin_update", data => {
 
     console.log("📍 REALTIME CHECKIN");
@@ -346,16 +367,15 @@ function loadProfileHeader() {
 
 
 // ===================== LOGOUT =====================
-function logout() {
+function logout(){
 
     localStorage.removeItem("user_id");
     localStorage.removeItem("role");
 
     sessionStorage.clear();
 
-    window.location.href = "index.html";
+    window.location.href="index.html";
 }
-
 
 // ===================== GLOBAL FIX =====================
 window.openChat = openChat;

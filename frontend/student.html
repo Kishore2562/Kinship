@@ -1,101 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="manifest" href="manifest.json">
 
-<meta name="theme-color" content="#0B1F3A">
-
-<link rel="apple-touch-icon" href="icon-192.png">
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1F3A">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <title>Student Dashboard</title>
+
 <link rel="stylesheet" href="styles.css">
+
 </head>
 
 <body>
 
+<script>
+if (!localStorage.getItem("user_id")) {
+    window.location.href = "index.html";
+}
+</script>
+
+<!-- Notification -->
+<div id="notification" class="notification"></div>
+<audio id="notifSound" src="notify.mp3"></audio>
+
+<!-- TOP BAR -->
 <div class="top-bar">
 
     <div class="user-info">
-        <span id="userName">User</span>
-        <small id="userRole">Role</small>
+        <span id="userName">User</span><br>
+        <small id="userRole">Student</small>
     </div>
 
-    <img id="profileIcon" src="default.png" class="profile-icon" onclick="openProfile()">
+    <img
+        id="profileIcon"
+        src="default.png"
+        onclick="openProfile()"
+    >
 
 </div>
 
 <h2>🎓 Student Dashboard</h2>
 
-<script>
-if (!sessionStorage.getItem("kinship_unlocked")) {
-    sessionStorage.setItem("kinship_target", window.location.href);
-    window.location.href = "index.html";
-}
-</script>
-
 <!-- PAIR -->
 <div class="card" id="pairSection">
-    <h3>🔑 Pair with Parent</h3>
+
+    <h3>🔑 Pair With Parent</h3>
 
     <button
         id="generateBtn"
-        onclick="generatePairCode()">
-
-        Generate Code
-
+        onclick="generatePairCode()"
+    >
+        Generate Pair Code
     </button>
 
     <p id="pairCodeDisplay"></p>
+
 </div>
-<!-- Notification -->
-<div id="notification" class="notification"></div>
 
-<audio id="notifSound" src="notify.mp3"></audio>
-
-<!-- CHECK-IN -->
+<!-- CHECKIN -->
 <div class="card">
-    <h3>📍 Check-in</h3>
 
-    <div class="button-group">
-        <button onclick="sendCheckin('I am good')">I am good</button>
-        <button onclick="sendCheckin('I am ok')">I am ok</button>
-    </div>
+    <h3>📍 Daily Check-In</h3>
 
-    <button onclick="sendCheckin('I am not okay')">I am not okay</button>
+    <button onclick="sendCheckin('I am good')">
+        😊 I am Good
+    </button>
+
+    <button onclick="sendCheckin('I am ok')">
+        🙂 I am OK
+    </button>
+
+    <button onclick="sendCheckin('I am not okay')">
+        😟 I am Not Okay
+    </button>
+
 </div>
 
 <!-- SOS -->
 <div class="card">
-    <h3>🚨 Emergency</h3>
-    <button class="sos-btn" onclick="sendSOS()">Send SOS</button>
+
+    <h3>🚨 Emergency SOS</h3>
+
+    <button
+        class="sos-btn"
+        onclick="sendSOS()"
+    >
+        SEND SOS
+    </button>
+
 </div>
 
-<!-- RELATIONSHIP -->
+<!-- BOND -->
 <div class="card">
-    <h3>❤️ Bond</h3>
+
+    <h3>❤️ Relationship Bond</h3>
+
     <div class="bond-bar">
         <div id="bondFill"></div>
     </div>
+
     <p id="bondPercent">0%</p>
+
 </div>
 
-<!-- NAV -->
-<div class="nav">
-    <button onclick="openChat()">💬 Chat</button>
-    <button onclick="openPuzzle()">🧩 Puzzle</button>
+<!-- ACTIONS -->
+<div class="card">
+
+    <button onclick="openChat()">
+        💬 Open Chat
+    </button>
+
+    <button onclick="openPuzzle()">
+        🧩 Open Puzzle
+    </button>
+
+    <button onclick="openProfile()">
+        👤 Profile
+    </button>
+
+    <button onclick="logout()">
+        🚪 Logout
+    </button>
+
 </div>
-
-<!-- PROFILE -->
-<button onclick="openProfile()">👤 Profile</button>
-
-<!-- LOGOUT -->
-<button onclick="logout()">🚪 Logout</button>
-
 
 <script src="utils.js"></script>
-
 <script type="module" src="student.js"></script>
-
 
 </body>
 </html>
